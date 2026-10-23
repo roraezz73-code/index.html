@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Heel Stick Screening Quiz</title>
+<style>
+:root{--bg:#f6faf9;--card:#ffffff;--ink:#1f3d3a;--muted:#5d7774;--teal:#1d6b62;--rose:#b8435c;--ok:#1d7a4f;--okbg:#e2f4ea;--no:#b3263e;--nobg:#fbe5e9;--line:#d3e4e1;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10211f;--card:#183230;--ink:#e6f2f0;--muted:#9bb8b4;--teal:#6cc7b9;--rose:#f08aa0;--ok:#7fdca9;--okbg:#17402e;--no:#ff9aad;--nobg:#4a2029;--line:#2b4a47}}
+:root[data-theme="dark"]{--bg:#10211f;--card:#183230;--ink:#e6f2f0;--muted:#9bb8b4;--teal:#6cc7b9;--rose:#f08aa0;--ok:#7fdca9;--okbg:#17402e;--no:#ff9aad;--nobg:#4a2029;--line:#2b4a47}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,"Times New Roman",serif;line-height:1.5}
+main{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.7rem;margin:8px 0 4px;color:var(--teal);line-height:1.2}
+.sub{color:var(--muted);font-family:system-ui,sans-serif;font-size:.95rem;margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.bar i{display:block;height:100%;background:var(--rose);width:0;transition:width .3s}
+.meta{font-family:system-ui,sans-serif;font-size:.85rem;color:var(--muted);margin-bottom:14px;display:flex;justify-content:space-between}
+.q{font-size:1.25rem;margin:0 0 16px;line-height:1.35}
+.opt{display:block;width:100%;text-align:left;font:inherit;font-family:system-ui,sans-serif;font-size:1rem;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:10px;cursor:pointer}
+.opt:focus-visible,.btn:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.opt.ok{background:var(--okbg);border-color:var(--ok)}
+.opt.no{background:var(--nobg);border-color:var(--no)}
+.opt:disabled{cursor:default}
+.fb{font-family:system-ui,sans-serif;font-size:.95rem;border-radius:12px;padding:12px 14px;margin:6px 0 14px}
+.fb.ok{background:var(--okbg);color:var(--ok)}
+.fb.no{background:var(--nobg);color:var(--no)}
+.btn{font-family:system-ui,sans-serif;font-size:1rem;font-weight:600;background:var(--teal);color:var(--card);border:0;border-radius:12px;padding:13px 20px;cursor:pointer;width:100%}
+.big{font-size:3rem;color:var(--rose);margin:4px 0;text-align:center}
+.center{text-align:center;font-family:system-ui,sans-serif}
+.hide{display:none}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>Heel Stick Screening Quiz</h1>
+<p class="sub">Neonatal hypothyroidism screening test · 10 easy questions</p>
+<div class="card" id="quiz">
+  <div class="bar"><i id="prog"></i></div>
+  <div class="meta"><span id="num"></span><span id="score"></span></div>
+  <p class="q" id="q"></p>
+  <div id="opts"></div>
+  <div id="fb" class="fb hide" role="status"></div>
+  <button class="btn hide" id="next"></button>
+</div>
+<div class="card hide" id="end">
+  <p class="center" id="msg"></p>
+  <div class="big" id="final"></div>
+  <p class="center" id="note"></p>
+  <button class="btn" id="again">Try again</button>
+</div>
+</main>
+<script>
+var Q=[
+{q:"Where should the heel be punctured?",o:["Center of the heel","Lateral or medial plantar area","Posterior part of the heel","Any part of the foot"],a:1,e:"Use the lateral or medial plantar area. Avoid the center and the back of the heel."},
+{q:"What should you do before puncturing the heel?",o:["Soak the heel in alcohol","Clean with 70% alcohol and let it dry completely","Squeeze the heel hard","Nothing, just puncture"],a:1,e:"Clean with 70% alcohol and let it dry. Never puncture an alcohol-soaked heel."},
+{q:"Which lancet should be used?",o:["Any clean needle","A reusable lancet","A sterile, single-use lancet","A used lancet after cleaning"],a:2,e:"Always use a sterile, single-use lancet."},
+{q:"What do you do with the first drop of blood?",o:["Put it on the card","Wipe it away","Mix it with the second drop","Save it in a tube"],a:1,e:"Wipe away the first drop, then collect the next large drop."},
+{q:"How should you apply pressure to get blood?",o:["Gentle, intermittent pressure","Hard, constant squeezing","Tapping the heel","No pressure at all"],a:0,e:"Use gentle, intermittent pressure. Excessive squeezing can cause bruising and a poor sample."},
+{q:"How do you fill each circle on the filter paper card?",o:["Several small drops layered on top","Touch the heel to the paper","Fill the circle completely in one application","Fill only half the circle"],a:2,e:"Fill each circle in one application. Do not layer drops or touch the heel to the paper."},
+{q:"What should you check on the filter paper card after filling?",o:["That the blood soaked through evenly on both sides","That the card is wet","That the circles are overlapping","That the card is folded"],a:0,e:"Check the reverse side to make sure the blood is evenly saturated."},
+{q:"How should the card be dried?",o:["On a heater","In direct sunlight","Flat, horizontally, at room temperature (about 2 hours)","Standing upright in a fridge"],a:2,e:"Air-dry flat at room temperature, away from heat, sunlight and humidity."},
+{q:"How do you help blood flow before the heel stick?",o:["Cool the baby's foot","Keep the heel warm (warm towel or radiant warmer)","Rub the heel with ice","Hold the baby upside down"],a:1,e:"Keep the baby and heel warm for 3–5 minutes to promote good blood flow."},
+{q:"When is the screening test usually done?",o:["At 24–48 hours after birth","At 1 month","At 6 months","At 1 year"],a:0,e:"The routine test is done at 24–48 hours after birth, before discharge."}
+];
+var i=0,s=0,done=false;
+var $=function(x){return document.getElementById(x)};
+function show(){
+  var d=Q[i];done=false;
+  $("num").textContent="Question "+(i+1)+" of "+Q.length;
+  $("score").textContent="Score: "+s;
+  $("prog").style.width=(i/Q.length*100)+"%";
+  $("q").textContent=d.q;
+  $("fb").className="fb hide";$("next").className="btn hide";
+  var h=$("opts");h.innerHTML="";
+  d.o.forEach(function(t,k){
+    var b=document.createElement("button");b.className="opt";b.textContent=t;
+    b.onclick=function(){pick(k)};h.appendChild(b);
+  });
+}
+function pick(k){
+  if(done)return;done=true;
+  var d=Q[i],b=$("opts").children,r=k===d.a;
+  if(r)s++;
+  for(var j=0;j<b.length;j++){b[j].disabled=true;if(j===d.a)b[j].classList.add("ok");}
+  if(!r)b[k].classList.add("no");
+  $("score").textContent="Score: "+s;
+  var f=$("fb");f.className="fb "+(r?"ok":"no");
+  f.textContent=(r?"Correct! ":"Not quite. ")+d.e;
+  var n=$("next");n.className="btn";n.textContent=i===Q.length-1?"See results":"Next question";
+  n.focus();
+}
+$("next").onclick=function(){
+  if(i===Q.length-1){finish()}else{i++;show()}
+};
+function finish(){
+  $("quiz").className="card hide";$("end").className="card";
+  $("final").textContent=s+" / "+Q.length;
+  $("msg").textContent="Quiz complete";
+  $("note").textContent=s>=9?"Excellent! You know the procedure very well.":s>=7?"Good job! Review the steps you missed.":"Keep practicing. Go back over the procedure steps and try again.";
+}
+$("again").onclick=function(){i=0;s=0;$("end").className="card hide";$("quiz").className="card";show()};
+show();
+</script>
+</body>
+</html>
